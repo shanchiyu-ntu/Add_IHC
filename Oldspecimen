@@ -1,0 +1,51 @@
+# Ref轉換成補染IHC的報告格式
+ 
+print("*********加染色***********")
+import re 
+f=open("ref.txt", mode='r')
+ref=f.readlines()
+f.close()
+g=open("formated.txt", mode='w')
+
+
+sp=ref[0][3:-1]
+print("*Clean SP")
+print(sp)
+
+dxl=ref[1][6:-1]
+print("*Clean diagnosis line")
+print(dxl)
+ndxl=dxl+", for IHC stain"
+
+ca=re.search("carcinoma",dxl)
+cal=ca.span()[0]
+
+for i in reversed(range(cal)):
+  if dxl[i]==',':
+    break
+print("*Diagnosis")
+print(dxl[i+2:])
+dx=dxl[i+2:]
+
+for j in range(cal):
+  if dxl[j]==',':
+    break
+print("*Organ")
+print(dxl[:j])
+org=dxl[:j]
+
+
+print(ndxl, end="\n\n",file=g)
+print("Previous Specimen number used for staining: "+sp, end="\n", file=g)
+print("Tumor type: "+dx, end="\n", file=g)
+print("Tumor location:  "+org, end="\n\n", file=g)
+print("* Block Tested: previous specimen "+sp, end="\n", file=g)
+print("* Tumor type: "+dx, end="\n", file=g)
+print("* Tumor location: "+org, end="\n\n", file=g)
+print("Immunohistochemistry performed on previous specimen %s revealed:"%sp, end="\n\n", file=g)
+
+
+g.close()
+
+
+
